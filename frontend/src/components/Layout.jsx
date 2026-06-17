@@ -127,14 +127,14 @@ const Topbar = ({ auth, setAuth }) => {
   );
 };
 
-const Layout = ({ auth, setAuth }) => {
+const Layout = ({ auth, setAuth, children }) => {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex transition-colors">
       <Sidebar auth={auth} />
       <div className="flex-1 ml-64 flex flex-col">
         <Topbar auth={auth} setAuth={setAuth} />
         <main className="p-6 flex-1 overflow-auto">
-          <Outlet />
+          {children}
         </main>
       </div>
     </div>
