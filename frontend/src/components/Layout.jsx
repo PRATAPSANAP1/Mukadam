@@ -66,16 +66,22 @@ import { useSeason } from '../context/SeasonContext';
 const Topbar = ({ auth, setAuth }) => {
   const { lang, toggleLanguage } = useLanguage();
   const { seasons, activeSeason, changeSeason } = useSeason();
-  const [isDark, setIsDark] = React.useState(false);
+  const [isDark, setIsDark] = React.useState(() => {
+    return localStorage.getItem('theme') === 'dark' || 
+           (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+  });
 
-  const toggleTheme = () => {
-    setIsDark(!isDark);
-    if (!isDark) {
+  React.useEffect(() => {
+    if (isDark) {
       document.documentElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
     } else {
       document.documentElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
     }
-  };
+  }, [isDark]);
+
+  const toggleTheme = () => setIsDark(!isDark);
   
   const handleLogout = () => {
     localStorage.removeItem('token');
