@@ -123,7 +123,7 @@ const Topbar = ({ auth, setAuth }) => {
 
 const Layout = ({ auth, setAuth }) => {
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex transition-colors">
+    <div className="min-h-screen bg-white dark:bg-gray-900 flex transition-colors">
       <Sidebar auth={auth} />
       <div className="flex-1 ml-64 flex flex-col">
         <Topbar auth={auth} setAuth={setAuth} />
