@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
-import { Home, Users, FileText, Banknote, CalendarMinus, Settings, BookOpen, Globe } from 'lucide-react';
+import { Home, Users, FileText, Banknote, CalendarMinus, Settings, BookOpen, Globe, Menu, X } from 'lucide-react';
 import clsx from 'clsx';
 import { useLanguage } from '../context/LanguageContext';
+import { useSeason } from '../context/SeasonContext';
 
-const Sidebar = ({ auth }) => {
+const Sidebar = ({ auth, isOpen, toggleSidebar }) => {
   const location = useLocation();
   const { t } = useLanguage();
 
@@ -27,51 +28,69 @@ const Sidebar = ({ auth }) => {
   }
 
   return (
-    <div className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen fixed top-0 left-0 flex flex-col shadow-sm z-10 transition-colors">
-      <div className="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-700 bg-primary/10 dark:bg-primary/20">
-        <h1 className="text-xl font-bold text-primary-dark dark:text-primary">हिशोब प्रणाली</h1>
+    <>
+      {/* Mobile overlay */}
+      {isOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-20 md:hidden transition-opacity"
+          onClick={toggleSidebar}
+        />
+      )}
+      
+      {/* Sidebar */}
+      <div className={clsx(
+        "w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 h-screen fixed top-0 left-0 flex flex-col shadow-sm z-30 transition-transform duration-300 ease-in-out",
+        isOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+      )}>
+        <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200 dark:border-gray-700 bg-primary/10 dark:bg-primary/20">
+          <h1 className="text-xl font-bold text-primary-dark dark:text-primary">हिशोब प्रणाली</h1>
+          <button onClick={toggleSidebar} className="md:hidden text-gray-500 hover:text-gray-900 dark:text-gray-300">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        <nav className="flex-1 overflow-y-auto py-4">
+          <ul className="space-y-1 px-3">
+            {links.map((link) => {
+              const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
+              return (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
+                    onClick={() => {
+                      if (window.innerWidth < 768) toggleSidebar();
+                    }}
+                    className={clsx(
+                      'flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors duration-200',
+                      isActive
+                        ? 'bg-primary text-white shadow-md shadow-primary/20'
+                        : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
+                    )}
+                  >
+                    <span className="mr-3">{link.icon}</span>
+                    {link.name}
+                  </Link>
+                </li>
+              );
+            })}
+          </ul>
+        </nav>
+        <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400 text-center">
+          {auth?.role === 'Koytawala' ? 'Koytawala Portal' : 'Admin Portal'}
+        </div>
       </div>
-      <nav className="flex-1 overflow-y-auto py-4">
-        <ul className="space-y-1 px-3">
-          {links.map((link) => {
-            const isActive = location.pathname === link.path || (link.path !== '/' && location.pathname.startsWith(link.path));
-            return (
-              <li key={link.path}>
-                <Link
-                  to={link.path}
-                  className={clsx(
-                    'flex items-center px-3 py-2.5 rounded-lg font-medium transition-colors duration-200',
-                    isActive
-                      ? 'bg-primary text-white shadow-md shadow-primary/20'
-                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700'
-                  )}
-                >
-                  <span className="mr-3">{link.icon}</span>
-                  {link.name}
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
-      </nav>
-      <div className="p-4 border-t border-gray-200 dark:border-gray-700 text-sm text-gray-500 dark:text-gray-400 text-center">
-        {auth?.role === 'Koytawala' ? 'Koytawala Portal' : 'Admin Portal'}
-      </div>
-    </div>
+    </>
   );
 };
 
-import { useSeason } from '../context/SeasonContext';
-
-const Topbar = ({ auth, setAuth }) => {
+const Topbar = ({ auth, setAuth, toggleSidebar }) => {
   const { lang, toggleLanguage } = useLanguage();
   const { seasons, activeSeason, changeSeason } = useSeason();
-  const [isDark, setIsDark] = React.useState(() => {
+  const [isDark, setIsDark] = useState(() => {
     return localStorage.getItem('theme') === 'dark' || 
            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (isDark) {
       document.documentElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
@@ -90,36 +109,41 @@ const Topbar = ({ auth, setAuth }) => {
   };
 
   return (
-    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6 sticky top-0 z-10 shadow-sm transition-colors">
-      <div className="text-xl font-semibold text-gray-800 dark:text-white flex items-center space-x-4">
-        <span>Us Todni Toli</span>
-        {auth?.role === 'Mukadam' && seasons.length > 0 && (
-          <select 
-            value={activeSeason?._id || ''}
-            onChange={(e) => changeSeason(e.target.value)}
-            className="text-sm bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-lg px-3 py-1 font-medium focus:ring-0"
-          >
-            {seasons.map(s => (
-              <option key={s._id} value={s._id}>{s.name}</option>
-            ))}
-          </select>
-        )}
+    <header className="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-4 sm:px-6 sticky top-0 z-10 shadow-sm transition-colors">
+      <div className="flex items-center space-x-3">
+        <button onClick={toggleSidebar} className="md:hidden p-2 -ml-2 text-gray-500 hover:bg-gray-100 rounded-lg dark:text-gray-300 dark:hover:bg-gray-700">
+          <Menu className="w-6 h-6" />
+        </button>
+        <div className="text-lg sm:text-xl font-semibold text-gray-800 dark:text-white flex flex-col sm:flex-row sm:items-center sm:space-x-4">
+          <span className="hidden sm:inline">Us Todni Toli</span>
+          {auth?.role === 'Mukadam' && seasons.length > 0 && (
+            <select 
+              value={activeSeason?._id || ''}
+              onChange={(e) => changeSeason(e.target.value)}
+              className="text-xs sm:text-sm bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-lg px-2 py-1 sm:px-3 font-medium focus:ring-0 mt-1 sm:mt-0 max-w-[120px] sm:max-w-none"
+            >
+              {seasons.map(s => (
+                <option key={s._id} value={s._id}>{s.name}</option>
+              ))}
+            </select>
+          )}
+        </div>
       </div>
-      <div className="flex items-center space-x-4">
-        <button onClick={toggleTheme} className="p-2 text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+      <div className="flex items-center space-x-2 sm:space-x-4">
+        <button onClick={toggleTheme} className="p-1 sm:p-2 text-gray-500 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
           {isDark ? '☀️' : '🌙'}
         </button>
         <button 
           onClick={toggleLanguage}
-          className="flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium transition-colors dark:text-white"
+          className="hidden sm:flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium transition-colors dark:text-white"
         >
           <Globe className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-300" />
-          {lang === 'mr' ? 'English' : 'मराठी'}
+          {lang === 'mr' ? 'EN' : 'MR'}
         </button>
-        <button onClick={handleLogout} className="text-sm font-medium text-red-600 hover:text-red-800">
-          लॉगआउट (Logout)
+        <button onClick={handleLogout} className="text-xs sm:text-sm font-medium text-red-600 hover:text-red-800">
+          लॉगआउट
         </button>
-        <div className="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">
+        <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold text-sm">
           {auth?.name?.charAt(0) || 'U'}
         </div>
       </div>
@@ -128,12 +152,18 @@ const Topbar = ({ auth, setAuth }) => {
 };
 
 const Layout = ({ auth, setAuth, children }) => {
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsSidebarOpen(!isSidebarOpen);
+  };
+
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 flex transition-colors">
-      <Sidebar auth={auth} />
-      <div className="flex-1 ml-64 flex flex-col">
-        <Topbar auth={auth} setAuth={setAuth} />
-        <main className="p-6 flex-1 overflow-auto">
+      <Sidebar auth={auth} isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <div className="flex-1 md:ml-64 flex flex-col w-full min-w-0 transition-all duration-300">
+        <Topbar auth={auth} setAuth={setAuth} toggleSidebar={toggleSidebar} />
+        <main className="p-4 sm:p-6 flex-1 overflow-auto">
           {children}
         </main>
       </div>

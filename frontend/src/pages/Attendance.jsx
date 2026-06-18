@@ -95,13 +95,13 @@ const Attendance = () => {
   };
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
+    <div className="animate-fade-in-up">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">रोजची हजेरी (Daily Attendance)</h1>
         <button 
           onClick={handleSave}
           disabled={loading || koytas.length === 0}
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors disabled:opacity-50"
+          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-sm transition-colors disabled:opacity-50 w-full sm:w-auto"
         >
           {loading ? 'Saving...' : 'सेव्ह करा (Save)'}
         </button>
@@ -134,12 +134,12 @@ const Attendance = () => {
       </div>
 
       <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b border-gray-200 dark:border-gray-600">
                 <th className="p-4 font-medium w-24">Koyta No.</th>
-                <th className="p-4 font-medium">Name (Husband & Wife)</th>
+                <th className="p-4 font-medium">Name (Koyta 1 & Koyta 2)</th>
                 <th className="p-4 font-medium text-center">Present (P)</th>
                 <th className="p-4 font-medium text-center">Half (H)</th>
                 <th className="p-4 font-medium text-center">Absent (A)</th>

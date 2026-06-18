@@ -35,11 +35,11 @@ const KoytawalaDashboard = () => {
 
   return (
     <div className="print:bg-white print:p-0 space-y-8 animate-fade-in-up">
-      <div className="flex justify-between items-center mb-6 print:hidden">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center mb-6 print:hidden">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">माझा हिशोब</h1>
         <button 
           onClick={handlePrint}
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors"
+          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-sm transition-colors w-full sm:w-auto"
         >
           <Printer className="w-5 h-5 mr-2" />
           हिशोब प्रिंट करा (Print)
@@ -143,8 +143,8 @@ const KoytawalaDashboard = () => {
         {/* Muster-wise History */}
         <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6 lg:col-span-3 print:border-none print:shadow-none">
           <h2 className="text-lg font-bold text-gray-800 dark:text-white mb-4 border-b pb-2">Muster-wise History / मस्टर इतिहास</h2>
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto w-full">
+            <table className="w-full text-left border-collapse min-w-[500px]">
               <thead>
                 <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b border-gray-200 dark:border-gray-600">
                   <th className="p-3 font-medium">मस्टर नं</th>

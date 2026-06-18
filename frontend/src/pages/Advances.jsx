@@ -61,34 +61,34 @@ const Advances = () => {
   );
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Advances / उचल</h1>
+    <div className="animate-fade-in-up">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">Advances / उचल</h1>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors"
+          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-sm transition-colors w-full sm:w-auto"
         >
           <PlusCircle className="w-5 h-5 mr-2" />
           नवीन उचल (New Advance)
         </button>
       </div>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 flex items-center justify-between">
-          <div className="relative w-64">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden transition-colors">
+        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex flex-col sm:flex-row gap-4 items-center justify-between">
+          <div className="relative w-full sm:w-64">
             <Search className="w-5 h-5 text-gray-400 absolute left-3 top-2.5" />
             <input 
               type="text" 
               placeholder="कोयता शोधा..." 
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none"
+              className="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
             />
           </div>
         </div>
         
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left border-collapse min-w-[600px]">
             <thead>
               <tr className="bg-gray-50 text-gray-600 text-sm border-b border-gray-200">
                 <th className="p-4 font-medium">Date</th>

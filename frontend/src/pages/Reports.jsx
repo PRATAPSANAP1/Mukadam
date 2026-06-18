@@ -48,12 +48,12 @@ const Reports = () => {
   };
 
   return (
-    <div className="print:bg-white print:p-0">
-      <div className="flex justify-between items-center mb-6 print:hidden">
+    <div className="print:bg-white print:p-0 animate-fade-in-up">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center mb-6 print:hidden">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">अहवाल (Reports)</h1>
         <button 
           onClick={handlePrint}
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors"
+          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-sm transition-colors w-full sm:w-auto"
         >
           <Printer className="w-5 h-5 mr-2" />
           अहवाल प्रिंट करा (Print)
@@ -64,7 +64,7 @@ const Reports = () => {
         <select 
           value={reportType} 
           onChange={e => setReportType(e.target.value)}
-          className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-primary"
+          className="w-full sm:w-auto border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-4 py-2 outline-none focus:ring-2 focus:ring-primary"
         >
           <option value="Muster">मस्टर अहवाल (Muster Report)</option>
           <option value="Settlement">अंतिम हिशोब (Settlement Report)</option>
@@ -72,19 +72,19 @@ const Reports = () => {
         </select>
       </div>
 
-      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden print:border-none print:shadow-none">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden print:border-none print:shadow-none transition-colors">
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 hidden print:block">
-          <h2 className="text-xl font-bold text-center">{reportType} Report - {activeSeason?.name}</h2>
+          <h2 className="text-xl font-bold text-center dark:text-white">{reportType} Report - {activeSeason?.name}</h2>
         </div>
         
         {loading ? (
-          <div className="p-8 text-center text-gray-500">लोड होत आहे...</div>
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400">लोड होत आहे...</div>
         ) : (
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto w-full">
             {reportType === 'Muster' && (
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse min-w-[600px]">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b">
+                  <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b dark:border-gray-600">
                     <th className="p-3 font-medium">मस्टर नं</th>
                     <th className="p-3 font-medium">सुरुवात</th>
                     <th className="p-3 font-medium">शेवट</th>
@@ -94,7 +94,7 @@ const Reports = () => {
                 </thead>
                 <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700">
                   {data.map(m => (
-                    <tr key={m._id} className="dark:text-gray-300">
+                    <tr key={m._id} className="dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50">
                       <td className="p-3">Muster {m.musterNo}</td>
                       <td className="p-3">{new Date(m.startDate).toLocaleDateString()}</td>
                       <td className="p-3">{new Date(m.endDate).toLocaleDateString()}</td>
@@ -107,9 +107,9 @@ const Reports = () => {
             )}
 
             {reportType === 'Village' && (
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse min-w-[600px]">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b">
+                  <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b dark:border-gray-600">
                     <th className="p-3 font-medium">गाव (Village)</th>
                     <th className="p-3 font-medium">एकूण कोयते</th>
                     <th className="p-3 font-medium">एकूण उचल</th>
@@ -118,11 +118,11 @@ const Reports = () => {
                 </thead>
                 <tbody className="text-sm divide-y divide-gray-100 dark:divide-gray-700">
                   {data.map(v => (
-                    <tr key={v.village} className="dark:text-gray-300">
-                      <td className="p-3 font-medium">{v.village}</td>
+                    <tr key={v.village} className="dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50">
+                      <td className="p-3 font-medium text-gray-900 dark:text-white">{v.village}</td>
                       <td className="p-3">{v.count}</td>
-                      <td className="p-3 text-red-600">₹{v.uchal.toFixed(2)}</td>
-                      <td className="p-3 text-green-600">₹{v.dhanda.toFixed(2)}</td>
+                      <td className="p-3 text-red-600 dark:text-red-400">₹{v.uchal.toFixed(2)}</td>
+                      <td className="p-3 text-green-600 dark:text-green-400">₹{v.dhanda.toFixed(2)}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -130,9 +130,9 @@ const Reports = () => {
             )}
 
             {reportType === 'Settlement' && (
-              <table className="w-full text-left border-collapse">
+              <table className="w-full text-left border-collapse min-w-[600px]">
                 <thead>
-                  <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b">
+                  <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b dark:border-gray-600">
                     <th className="p-3 font-medium">कोयता</th>
                     <th className="p-3 font-medium">धंदा</th>
                     <th className="p-3 font-medium">उचल</th>

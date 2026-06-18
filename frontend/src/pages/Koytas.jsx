@@ -66,12 +66,12 @@ const Koytas = () => {
   });
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
+    <div className="animate-fade-in-up">
+      <div className="flex flex-col sm:flex-row gap-4 justify-between sm:items-center mb-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-white">कोयता व्यवस्थापन (All Koyte)</h1>
         <button 
           onClick={() => setShowModal(true)}
-          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center shadow-sm transition-colors"
+          className="bg-primary hover:bg-primary-dark text-white px-4 py-2 rounded-lg flex items-center justify-center shadow-sm transition-colors w-full sm:w-auto"
         >
           <PlusCircle className="w-5 h-5 mr-2" />
           नवीन कोयता (New Koyta)
@@ -90,12 +90,12 @@ const Koytas = () => {
               className="pl-10 pr-4 py-2 w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-colors"
             />
           </div>
-          <div className="flex items-center space-x-2">
-            <Filter className="w-5 h-5 text-gray-400" />
+          <div className="flex items-center space-x-2 w-full sm:w-auto">
+            <Filter className="w-5 h-5 text-gray-400 hidden sm:block" />
             <select 
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
-              className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary transition-colors"
+              className="border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-primary transition-colors w-full sm:w-auto"
             >
               <option value="All">सर्व (All)</option>
               <option value="Full">पूर्ण कोयते (Full)</option>
@@ -106,12 +106,12 @@ const Koytas = () => {
           </div>
         </div>
         
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse">
+        <div className="overflow-x-auto w-full">
+          <table className="w-full text-left border-collapse min-w-[800px]">
             <thead>
               <tr className="bg-gray-50 dark:bg-gray-700 text-gray-600 dark:text-gray-300 text-sm border-b border-gray-200 dark:border-gray-600">
                 <th className="p-4 font-medium">Koyta No.</th>
-                <th className="p-4 font-medium">Name (Husband & Wife)</th>
+                <th className="p-4 font-medium">Name (Koyta 1 & Koyta 2)</th>
                 <th className="p-4 font-medium">Type</th>
                 <th className="p-4 font-medium">Status (स्थिती)</th>
                 <th className="p-4 font-medium">धंदा (Dhanda)</th>
@@ -181,11 +181,11 @@ const Koytas = () => {
                 </select>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Husband Name (नवऱ्याचे नाव)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Koyta 1</label>
                 <input type="text" name="husbandName" value={formData.husbandName} onChange={handleInputChange} required className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary outline-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Wife Name (बायकोचे नाव)</label>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Koyta 2</label>
                 <input type="text" name="wifeName" value={formData.wifeName} onChange={handleInputChange} className="w-full border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white rounded-lg px-3 py-2 focus:ring-2 focus:ring-primary outline-none" />
               </div>
               <div>
