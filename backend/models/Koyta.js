@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
 const koytaSchema = new mongoose.Schema({
-  koytaNo: { type: Number, required: true, unique: true },
+  seasonId: { type: mongoose.Schema.Types.ObjectId, ref: 'Season' },
+  koytaNo: { type: Number, required: true },
   husbandName: { type: String, required: true },
   wifeName: { type: String, required: true },
   mobile: { type: String },

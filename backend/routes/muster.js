@@ -5,7 +5,9 @@ const Muster = require('../models/Muster');
 // Get all Musters
 router.get('/', async (req, res) => {
   try {
-    const musters = await Muster.find().sort({ musterNo: 1 });
+    const seasonId = req.headers['x-season-id'];
+    const query = seasonId ? { seasonId } : {};
+    const musters = await Muster.find(query).sort({ musterNo: 1 });
     res.json(musters);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -14,7 +16,11 @@ router.get('/', async (req, res) => {
 
 // Create new Muster
 router.post('/', async (req, res) => {
-  const muster = new Muster(req.body);
+  const musterData = { ...req.body };
+  if (req.headers['x-season-id']) {
+    musterData.seasonId = req.headers['x-season-id'];
+  }
+  const muster = new Muster(musterData);
   try {
     const newMuster = await muster.save();
     res.status(201).json(newMuster);

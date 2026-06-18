@@ -14,7 +14,11 @@ router.get('/koyta/:koytaId', async (req, res) => {
 
 // Add advance
 router.post('/', async (req, res) => {
-  const advance = new Advance(req.body);
+  const advanceData = { ...req.body };
+  if (req.headers['x-season-id'] && !advanceData.seasonId) {
+    advanceData.seasonId = req.headers['x-season-id'];
+  }
+  const advance = new Advance(advanceData);
   try {
     const newAdvance = await advance.save();
     res.status(201).json(newAdvance);
@@ -26,7 +30,9 @@ router.post('/', async (req, res) => {
 // Get all advances
 router.get('/', async (req, res) => {
   try {
-    const advances = await Advance.find().populate('koytaId', 'koytaNo husbandName');
+    const seasonId = req.headers['x-season-id'];
+    const query = seasonId ? { seasonId } : {};
+    const advances = await Advance.find(query).populate('koytaId', 'koytaNo husbandName');
     res.json(advances);
   } catch (error) {
     res.status(500).json({ message: error.message });

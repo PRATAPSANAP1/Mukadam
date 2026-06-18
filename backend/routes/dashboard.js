@@ -8,14 +8,21 @@ const Settlement = require('../models/Settlement');
 // Get Dashboard Metrics
 router.get('/metrics', async (req, res) => {
   try {
-    const totalKoytas = await Koyta.countDocuments({ isActive: true });
+    const seasonId = req.headers['x-season-id'];
+    const query = seasonId ? { seasonId } : {};
     
-    const openMusters = await Muster.countDocuments({ status: 'Open' });
+    // Total Koytas for this season (not considering isActive of koyta globally, just checking season)
+    // Wait, previous logic was { isActive: true } for Koytas. Let's combine:
+    const koytaQuery = { ...query, isActive: true };
+    const totalKoytas = await Koyta.countDocuments(koytaQuery);
     
-    const advances = await Advance.find();
+    const musterQuery = { ...query, status: 'Open' };
+    const openMusters = await Muster.countDocuments(musterQuery);
+    
+    const advances = await Advance.find(query);
     const totalAdvances = advances.reduce((acc, curr) => acc + curr.amount, 0);
 
-    const settlements = await Settlement.find();
+    const settlements = await Settlement.find(query);
     const totalBalance = settlements.reduce((acc, curr) => acc + curr.balance, 0);
 
     res.json({

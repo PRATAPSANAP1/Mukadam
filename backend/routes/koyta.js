@@ -5,7 +5,9 @@ const Koyta = require('../models/Koyta');
 // Get all Koytas with basic stats
 router.get('/', async (req, res) => {
   try {
-    const koytas = await Koyta.find().lean();
+    const seasonId = req.headers['x-season-id'];
+    const query = seasonId ? { seasonId } : {};
+    const koytas = await Koyta.find(query).lean();
     
     // For advanced filters we need: dhanda, uchal, baki, khade
     const Settlement = require('../models/Settlement');
@@ -41,7 +43,11 @@ router.get('/', async (req, res) => {
 
 // Create new Koyta
 router.post('/', async (req, res) => {
-  const koyta = new Koyta(req.body);
+  const koytaData = { ...req.body };
+  if (req.headers['x-season-id']) {
+    koytaData.seasonId = req.headers['x-season-id'];
+  }
+  const koyta = new Koyta(koytaData);
   try {
     const newKoyta = await koyta.save();
     res.status(201).json(newKoyta);
