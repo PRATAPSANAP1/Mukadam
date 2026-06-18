@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { useLanguage } from '../context/LanguageContext';
+import { useSeason } from '../context/SeasonContext';
 
 const Dashboard = () => {
   const { t } = useLanguage();
+  const { activeSeason } = useSeason();
   const [metrics, setMetrics] = useState({
     totalKoytas: 0,
     openMusters: 0,
@@ -41,7 +43,7 @@ const Dashboard = () => {
         </div>
         <div className="relative z-10 mt-6 md:mt-0 bg-white/20 backdrop-blur-md px-6 py-3 rounded-xl border border-white/30 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-wider text-orange-50">सध्याचा हंगाम</p>
-          <p className="text-2xl font-bold">2026-27</p>
+          <p className="text-2xl font-bold">{activeSeason?.name || 'Loading...'}</p>
         </div>
       </div>
 
