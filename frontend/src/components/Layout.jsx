@@ -179,10 +179,12 @@ const Topbar = ({ auth, setAuth, toggleSidebar }) => {
                 <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">सुरुवात तारीख (Start Date)</label>
                 <input type="date" value={newSeasonData.startDate} onChange={e => setNewSeasonData({...newSeasonData, startDate: e.target.value})} required className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white outline-none focus:ring-2 focus:ring-primary" />
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">शेवट तारीख (End Date)</label>
-                <input type="date" value={newSeasonData.endDate} onChange={e => setNewSeasonData({...newSeasonData, endDate: e.target.value})} required className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white outline-none focus:ring-2 focus:ring-primary" />
-              </div>
+              {!newSeasonData.isActive && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">शेवट तारीख (End Date)</label>
+                  <input type="date" value={newSeasonData.endDate} onChange={e => setNewSeasonData({...newSeasonData, endDate: e.target.value})} required={!newSeasonData.isActive} className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white outline-none focus:ring-2 focus:ring-primary" />
+                </div>
+              )}
               <div className="flex items-center">
                 <input type="checkbox" id="isActiveSeason" checked={newSeasonData.isActive} onChange={e => setNewSeasonData({...newSeasonData, isActive: e.target.checked})} className="mr-2 h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" />
                 <label htmlFor="isActiveSeason" className="text-sm font-medium text-gray-700 dark:text-gray-300">हा चालू हंगाम आहे का? (Set as Active Season)</label>

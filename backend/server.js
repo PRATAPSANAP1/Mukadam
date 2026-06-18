@@ -7,11 +7,11 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-const corsOptions = {
-  origin: ['http://localhost:5173', 'http://localhost:3000', 'https://mukadam.vercel.app', 'https://us-todni-toli-frontend.vercel.app'],
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: '*', // Allow all origins to prevent ERR_CONNECTION_CLOSED
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'x-season-id']
+}));
 app.use(express.json());
 
 // Database Connection

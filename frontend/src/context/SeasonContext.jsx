@@ -11,6 +11,14 @@ export const SeasonProvider = ({ children }) => {
     fetchSeasons();
   }, []);
 
+  useEffect(() => {
+    if (activeSeason) {
+      api.defaults.headers.common['x-season-id'] = activeSeason._id;
+    } else {
+      delete api.defaults.headers.common['x-season-id'];
+    }
+  }, [activeSeason]);
+
   const fetchSeasons = async () => {
     try {
       const res = await api.get('/season');
