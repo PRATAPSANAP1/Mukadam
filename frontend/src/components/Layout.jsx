@@ -84,7 +84,9 @@ const Sidebar = ({ auth, isOpen, toggleSidebar }) => {
 
 const Topbar = ({ auth, setAuth, toggleSidebar }) => {
   const { lang, toggleLanguage } = useLanguage();
-  const { seasons, activeSeason, changeSeason } = useSeason();
+  const { seasons, activeSeason, changeSeason, addSeason } = useSeason();
+  const [showAddSeasonModal, setShowAddSeasonModal] = useState(false);
+  const [newSeasonData, setNewSeasonData] = useState({ name: '', startDate: '', endDate: '', isActive: true });
   const [isDark, setIsDark] = useState(() => {
     return localStorage.getItem('theme') === 'dark' || 
            (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
@@ -119,12 +121,19 @@ const Topbar = ({ auth, setAuth, toggleSidebar }) => {
           {auth?.role === 'Mukadam' && seasons.length > 0 && (
             <select 
               value={activeSeason?._id || ''}
-              onChange={(e) => changeSeason(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value === 'add_new') {
+                  setShowAddSeasonModal(true);
+                } else {
+                  changeSeason(e.target.value);
+                }
+              }}
               className="text-xs sm:text-sm bg-gray-100 dark:bg-gray-700 dark:text-white border-none rounded-lg px-2 py-1 sm:px-3 font-medium focus:ring-0 mt-1 sm:mt-0 max-w-[120px] sm:max-w-none"
             >
               {seasons.map(s => (
                 <option key={s._id} value={s._id}>{s.name}</option>
               ))}
+              <option value="add_new">+ नवीन हंगाम (Add New)</option>
             </select>
           )}
         </div>
@@ -147,6 +156,45 @@ const Topbar = ({ auth, setAuth, toggleSidebar }) => {
           {auth?.name?.charAt(0) || 'U'}
         </div>
       </div>
+
+      {showAddSeasonModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl w-full max-w-md p-6">
+            <h2 className="text-xl font-bold mb-4 dark:text-white">नवीन हंगाम जोडा (Add New Season)</h2>
+            <form onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                await addSeason(newSeasonData);
+                setShowAddSeasonModal(false);
+                setNewSeasonData({ name: '', startDate: '', endDate: '' });
+              } catch (error) {
+                alert('Error adding season');
+              }
+            }} className="space-y-4 text-left">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">हंगाम नाव (Season Name, e.g. 2027-28)</label>
+                <input type="text" value={newSeasonData.name} onChange={e => setNewSeasonData({...newSeasonData, name: e.target.value})} required className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">सुरुवात तारीख (Start Date)</label>
+                <input type="date" value={newSeasonData.startDate} onChange={e => setNewSeasonData({...newSeasonData, startDate: e.target.value})} required className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">शेवट तारीख (End Date)</label>
+                <input type="date" value={newSeasonData.endDate} onChange={e => setNewSeasonData({...newSeasonData, endDate: e.target.value})} required className="w-full border rounded-lg px-3 py-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white outline-none focus:ring-2 focus:ring-primary" />
+              </div>
+              <div className="flex items-center">
+                <input type="checkbox" id="isActiveSeason" checked={newSeasonData.isActive} onChange={e => setNewSeasonData({...newSeasonData, isActive: e.target.checked})} className="mr-2 h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded" />
+                <label htmlFor="isActiveSeason" className="text-sm font-medium text-gray-700 dark:text-gray-300">हा चालू हंगाम आहे का? (Set as Active Season)</label>
+              </div>
+              <div className="flex justify-end space-x-3 pt-4">
+                <button type="button" onClick={() => setShowAddSeasonModal(false)} className="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg dark:text-gray-300 dark:hover:bg-gray-700">Cancel</button>
+                <button type="submit" className="px-4 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark">Save</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

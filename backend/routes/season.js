@@ -13,9 +13,14 @@ router.get('/', async (req, res) => {
 
 router.post('/', async (req, res) => {
   try {
-    // Set all others to inactive
-    await Season.updateMany({}, { isActive: false });
-    const newSeason = new Season(req.body);
+    const shouldBeActive = req.body.isActive !== undefined ? req.body.isActive : true;
+    
+    if (shouldBeActive) {
+      // Set all others to inactive
+      await Season.updateMany({}, { isActive: false });
+    }
+    
+    const newSeason = new Season({ ...req.body, isActive: shouldBeActive });
     await newSeason.save();
     res.status(201).json(newSeason);
   } catch (error) {

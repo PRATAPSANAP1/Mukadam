@@ -31,8 +31,19 @@ export const SeasonProvider = ({ children }) => {
     }
   };
 
+  const addSeason = async (seasonData) => {
+    try {
+      const res = await api.post('/season', seasonData);
+      fetchSeasons();
+      return res.data;
+    } catch (error) {
+      console.error('Failed to add season', error);
+      throw error;
+    }
+  };
+
   return (
-    <SeasonContext.Provider value={{ seasons, activeSeason, changeSeason }}>
+    <SeasonContext.Provider value={{ seasons, activeSeason, changeSeason, addSeason }}>
       {children}
     </SeasonContext.Provider>
   );
